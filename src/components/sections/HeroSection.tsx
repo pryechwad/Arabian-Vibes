@@ -9,6 +9,7 @@ import {
 import { Search, X, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 import { useSliders } from "@/hooks/useSliders";
 import { useActivities } from "@/hooks/useActivities";
+import { measureComponentRender } from "@/lib/performance";
 
 // Using Unsplash images
 const dubaiImg = "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1200&q=80";
@@ -17,6 +18,7 @@ const rakImg = "https://images.unsplash.com/photo-1582672060674-bc2bd808a8b5?w=1
 const omanImg = "https://images.unsplash.com/photo-1590642916589-592bca10dfbf?w=1200&q=80";
 
 const HeroSection = () => {
+  const endTimer = measureComponentRender('HeroSection');
   const [showPromo, setShowPromo] = useState(true);
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [locationOpen, setLocationOpen] = useState(false);
@@ -26,6 +28,7 @@ const HeroSection = () => {
   const navigate = useNavigate();
   const popoverRef = useRef<HTMLDivElement>(null);
 
+  // Original data fetching
   const { data: slidersData, isLoading: slidersLoading } = useSliders({ page: "activities" });
   const homeSliders = slidersData?.slides || [];
 
@@ -39,6 +42,9 @@ const HeroSection = () => {
   ];
 
   const [currentSlide, setCurrentSlide] = useState(0);
+
+  // End performance measurement
+  endTimer();
 
   const goToSlide = (index: number) => {
     setCurrentSlide(index);
@@ -118,8 +124,8 @@ const HeroSection = () => {
       
       if (activityList.length > 0) {
         suggestionList = activityList
-          .map((activity: any) => activity.title || activity.name)
-          .filter((title: string) => title.toLowerCase().includes(value.toLowerCase()))
+          .map((activity: { title?: string; name?: string }) => activity.title || activity.name)
+          .filter((title: string) => title && title.toLowerCase().includes(value.toLowerCase()))
           .slice(0, 5);
       } else {
         // Fallback suggestions when backend data is not available
@@ -286,7 +292,7 @@ const HeroSection = () => {
               <div className="grid grid-cols-1 sm:grid-cols-6 gap-3 sm:gap-4 items-end">
                 {/* Search Activities */}
                 <div className="sm:col-span-4 relative">
-                  <label className="text-xs sm:text-sm font-bold text-gray-800 mb-2 block flex items-center">
+                  <label className="text-xs sm:text-sm font-bold text-gray-800 mb-2 flex items-center">
                     <Search className="h-4 w-4 mr-2 text-primary" />
                     Search Activities
                   </label>
@@ -330,7 +336,7 @@ const HeroSection = () => {
 
                 {/* Location Selector */}
                 <div className="sm:col-span-2">
-                  <label className="text-xs sm:text-sm font-bold text-gray-800 mb-2 block flex items-center">
+                  <label className="text-xs sm:text-sm font-bold text-gray-800 mb-2 flex items-center">
                     <MapPin className="h-4 w-4 mr-2 text-primary" />
                     Location
                   </label>

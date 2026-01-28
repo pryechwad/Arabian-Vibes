@@ -5,9 +5,11 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useCards } from "@/hooks/useCards";
 import { useSliders } from "@/hooks/useSliders";
 import { DynamicSlider } from "@/components/ui/DynamicSlider";
+import LazyImage from "@/components/LazyImage";
 import { Loader2, AlertCircle, Search } from "lucide-react";
 import { useState } from "react";
 import InternalPageLayout from "./InternalPageLayout";
+import { measureComponentRender } from "@/lib/performance";
 
 interface PopularExperiencesProps {
   city: string;
@@ -20,18 +22,19 @@ const PopularExperiences = ({
   title,
   description,
 }: PopularExperiencesProps) => {
+  const endTimer = measureComponentRender('PopularExperiences');
   const { convertAmount, formatAmount, currentCurrency } = useCurrency();
   const { isAgent } = useAuth();
   const [selectedCard, setSelectedCard] = useState<any | null>(null);
   
-  // Fetch cards using the useCards hook for "popular experience" page
+  // Original data fetching
   const { 
     data: cardsResponse, 
     isLoading, 
     error 
   } = useCards({ page: 'popular_experience', limit: 20 });
 
-  // Fetch sliders for popular experience page
+  // Fetch sliders
   const { 
     data: slidersResponse, 
     isLoading: slidersLoading, 
@@ -39,6 +42,9 @@ const PopularExperiences = ({
   } = useSliders({ page: 'popular_experience', limit: 5 });
 
   const cards = cardsResponse?.cards || [];
+
+  // End performance measurement
+  endTimer();
 
   const getDisplayPrice = (card: any) => {
     const price = isAgent && card.agentPrice ? card.agentPrice : (card.originalPrice || card.discountedPrice);
@@ -218,13 +224,10 @@ const PopularExperiences = ({
               style={{ animationDelay: `${index * 50}ms` }}
             >
               <div className="relative aspect-[4/3] overflow-hidden rounded-t-3xl">
-                <img
+                <LazyImage
                   src={card.images?.[0]?.url || '/placeholder.svg'}
                   alt={card.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-115"
-                  onError={(e) => {
-                    e.currentTarget.src = '/placeholder.svg';
-                  }}
+                  className="w-full h-full transition-transform duration-700 group-hover:scale-115"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 

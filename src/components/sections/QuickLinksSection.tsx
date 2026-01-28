@@ -10,6 +10,7 @@ import {
   Camera,
   Compass
 } from "lucide-react";
+import { measureComponentRender } from "@/lib/performance";
 
 const quickLinks = [
   {
@@ -53,6 +54,11 @@ const quickLinks = [
 ];
 
 const QuickLinksSection = () => {
+  const endTimer = measureComponentRender('QuickLinksSection');
+  
+  // End performance measurement
+  endTimer();
+  
   return (
     <section className="py-12 sm:py-16 bg-gradient-to-b from-white via-blue-50/30 to-white"> 
       <div className="container mx-auto px-4">
