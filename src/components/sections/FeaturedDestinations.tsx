@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 // Using Unsplash images
 const dubaiCity = "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80";
@@ -35,6 +36,12 @@ const destinations = [
 ];
 
 const FeaturedDestinations = () => {
+  const navigate = useNavigate();
+
+  const handleDestinationClick = (destinationName: string) => {
+    const urlName = destinationName.toLowerCase().replace(/\s+/g, '-');
+    navigate(`/destination/${urlName}`);
+  };
   return (
     <section className="py-12 sm:py-16 bg-gradient-to-b from-blue-50/30 via-white to-blue-50/30">
       <div className="container mx-auto px-4">
@@ -65,6 +72,7 @@ const FeaturedDestinations = () => {
               key={destination.id}
               className="group relative overflow-hidden rounded-3xl bg-white shadow-xl hover:shadow-2xl transition-all duration-500 cursor-pointer animate-scale-in transform hover:scale-105 border border-gray-100"
               style={{ animationDelay: `${index * 100}ms` }}
+              onClick={() => handleDestinationClick(destination.name)}
             >
               <div className="aspect-[4/3] relative overflow-hidden">
                 <img
