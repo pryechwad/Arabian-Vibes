@@ -201,19 +201,19 @@ const Header = () => {
       </div>
 
       {/* Desktop Navigation */}
-      <nav className="hidden lg:flex justify-center items-center gap-2 px-4 py-3 border-t border-border bg-gradient-to-r from-blue-50/50 via-white to-blue-50/50 shadow-sm">
+      <nav className="hidden lg:flex justify-center items-center gap-4 px-6 py-4 border-t border-border bg-gradient-to-r from-blue-50/50 via-white to-blue-50/50 shadow-sm">
         {navTabs.map((tab) => {
           const isActive = location.pathname === tab.href;
           return (
             <Link
               key={tab.id}
               to={tab.href}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-sm transition-all duration-300 shadow-sm ${isActive
-                  ? "bg-gradient-to-r from-primary to-primary/90 text-white shadow-lg scale-105"
-                  : "text-gray-700 hover:bg-primary/10 hover:text-primary hover:scale-105 hover:shadow-md bg-white"
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg font-medium text-sm transition-all duration-300 whitespace-nowrap ${isActive
+                  ? "bg-gradient-to-r from-primary to-primary/90 text-white shadow-md"
+                  : "text-gray-700 hover:bg-primary/10 hover:text-primary hover:shadow-sm bg-white border border-gray-200"
                 }`}
             >
-              <span className="transition-transform group-hover:scale-125">{tab.icon}</span>
+              <span className="transition-transform">{tab.icon}</span>
               <span>{tab.label}</span>
             </Link>
           );
