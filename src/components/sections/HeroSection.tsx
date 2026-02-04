@@ -18,7 +18,6 @@ const rakImg = "https://images.unsplash.com/photo-1582672060674-bc2bd808a8b5?w=1
 const omanImg = "https://images.unsplash.com/photo-1590642916589-592bca10dfbf?w=1200&q=80";
 
 const HeroSection = () => {
-  const endTimer = measureComponentRender('HeroSection');
   const [showPromo, setShowPromo] = useState(true);
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [locationOpen, setLocationOpen] = useState(false);
@@ -27,6 +26,7 @@ const HeroSection = () => {
   const [isClosing, setIsClosing] = useState(false);
   const navigate = useNavigate();
   const popoverRef = useRef<HTMLDivElement>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Original data fetching
   const { data: slidersData, isLoading: slidersLoading } = useSliders({ page: "activities" });
@@ -43,8 +43,11 @@ const HeroSection = () => {
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // End performance measurement
-  endTimer();
+  // Performance measurement on mount only
+  useEffect(() => {
+    const endTimer = measureComponentRender('HeroSection');
+    return endTimer;
+  }, []);
 
   const goToSlide = (index: number) => {
     setCurrentSlide(index);
@@ -93,7 +96,7 @@ const HeroSection = () => {
     setSelectedLocation(newLocation);
     setLocationOpen(false);
 
-    setTimeout(() => {
+    timeoutRef.current = setTimeout(() => {
       setIsClosing(false);
       if (newLocation) {
         handleRedirect(loc.id);
@@ -102,6 +105,15 @@ const HeroSection = () => {
       }
     }, 300);
   };
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   const goToPrevSlide = () => {
     setCurrentSlide((prev) =>

@@ -20,6 +20,7 @@ const Cruise = lazy(() => import("./pages/Cruise"));
 const Contact = lazy(() => import("./pages/Contact"));
 const AbuDhabiExperience = lazy(() => import("./pages/AbuDhabiExperience"));
 const AboutUs = lazy(() => import("./pages/AboutUs"));
+const Destination = lazy(() => import("./pages/Destination"));
 
 import { CurrencyProvider } from "@/contexts/CurrencyContext";
 import { AuthProvider } from "@/contexts/AuthContext";
@@ -70,6 +71,7 @@ const App = () => (
                 <Route path="/activities/ras-al-khaimah" element={<RasAlKhaimahActivitiesPage />} />
                 <Route path="/activities/oman" element={<OmanActivitiesPage />} />
                 <Route path="/experiences/abu-dhabi" element={<AbuDhabiExperience />} />
+                <Route path="/destination/:destinationName" element={<Destination />} />
 
                 <Route path="/hotelsearch" element={<Hotels />} />
                 <Route path="/holidays" element={<Holidays />} />
